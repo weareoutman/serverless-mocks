@@ -7,7 +7,7 @@ function getEventStream(input) {
       state: "submitted",
       jobs: [],
       plans: [],
-      __delay: 2000,
+      __delay: 100,
     },
     {
       state: "working",
@@ -22,7 +22,7 @@ function getEventStream(input) {
           instruction: "Say thank you",
         },
       ],
-      __delay: 200,
+      __delay: 100,
     },
     {
       jobs: [
@@ -33,7 +33,7 @@ function getEventStream(input) {
           // tag: "hello-tool",
         },
       ],
-      __delay: 2000,
+      __delay: 500,
     },
     {
       jobs: [
@@ -48,7 +48,7 @@ function getEventStream(input) {
           parent: ["mock-job-id-1"],
         },
       ],
-      __delay: 1000,
+      __delay: 500,
     },
     {
       jobs: [
@@ -82,7 +82,7 @@ function getEventStream(input) {
           ],
         },
       ],
-      __delay: 1000,
+      __delay: 500,
     },
     {
       jobs: [
@@ -159,7 +159,7 @@ function getEventStream(input) {
           // tag: "thank-you-tool",
         },
       ],
-      __delay: 2000,
+      __delay: 500,
     },
     // {
     //   jobs: [
@@ -182,7 +182,7 @@ function getEventStream(input) {
     //       ],
     //     },
     //   ],
-    //   __delay: 1000,
+    //   __delay: 500,
     // },
     // {
     //   jobs: [
@@ -201,7 +201,7 @@ function getEventStream(input) {
     //       ],
     //     },
     //   ],
-    //   __delay: 200,
+    //   __delay: 100,
     // },
     {
       state: "input-required",
@@ -249,7 +249,7 @@ function getEventStream(input) {
             ],
           },
         ],
-        __delay: 2000,
+        __delay: 500,
       },
       // {
       //   jobs: [
@@ -269,7 +269,7 @@ function getEventStream(input) {
       //       ],
       //     },
       //   ],
-      //   __delay: 2000,
+      //   __delay: 500,
       // },
       {
         // plans: [],
@@ -296,7 +296,7 @@ function getEventStream(input) {
             instruction: "Say goodbye",
           },
         ],
-        __delay: 1000,
+        __delay: 500,
       },
       {
         jobs: [
@@ -316,7 +316,7 @@ function getEventStream(input) {
             ],
           }
         ],
-        __delay: 1000,
+        __delay: 500,
       },
       {
         state: "completed",
@@ -351,7 +351,7 @@ export async function initializeTask(requirement) {
   const task = {
     id,
     requirement,
-    cursor: -1,
+    cursor: 0,
   };
 
   await store.set(id, JSON.stringify(task));
@@ -379,7 +379,7 @@ export function run(task) {
         resolve();
       } else {
         const last = allEventStream[allEventStream.length - 1];
-        setTimeout(next, (last.__delay ?? 2000));
+        setTimeout(next, (last.__delay ?? 500));
       }
     }
     next();
