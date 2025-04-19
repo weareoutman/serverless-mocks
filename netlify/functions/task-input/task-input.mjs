@@ -93,7 +93,7 @@ export default async function taskInput(req, ctx) {
 
   const newTask = {
     ...taskMetadata,
-    cursor: taskMetadata.cursor - 1,
+    cursor: taskMetadata.cursor,
     input,
   };
   await tasks.set(taskId, JSON.stringify(newTask));
