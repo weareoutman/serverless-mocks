@@ -1,3 +1,8 @@
 {
-  "name": "serverless-mocks"
+  "name": "serverless-mocks",
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0",
+    "@netlify/functions": "^3.1.2",
+    "uuid": "^11.1.0"
+  }
 }

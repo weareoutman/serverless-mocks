@@ -1,7 +1,11 @@
 // @ts-check
-import { startTask } from "./mock-task.mjs";
+import { initializeTask, run } from "./task-server.mjs";
 
-const CORSHeaders = {
+/**
+ * @typedef {import("@netlify/functions").Context & { waitUntil: ((promise: Promise<unknown>) => void) }} Context
+ */
+
+export const CORSHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "*",
   "Access-Control-Allow-Methods": "*",
@@ -9,9 +13,10 @@ const CORSHeaders = {
 
 /**
  * @param {Request} req
+ * @param {Context} ctx
  * @return {Promise<Response>} response
  */
-export default async function sendTask(req) {
+export default async function taskSend(req, ctx) {
   if (req.method === "OPTIONS") {
     return new Response(null, {
       headers: {
@@ -52,7 +57,9 @@ export default async function sendTask(req) {
     });
   }
 
-  const task = startTask(body.requirement);
+  const task = await initializeTask(body.requirement);
+
+  ctx.waitUntil(run(task));
 
   return new Response(
     JSON.stringify(task),
