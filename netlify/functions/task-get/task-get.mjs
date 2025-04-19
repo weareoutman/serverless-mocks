@@ -32,9 +32,9 @@ export default async function taskGet(req) {
   }
 
   const tasks = getStore("tasks");
-  const blob = await tasks.get(taskId);
+  let previousTask = await tasks.get(taskId, { type: "json", consistency: "strong" });
 
-  if (!blob) {
+  if (!previousTask) {
     return new Response("Task Not Found", {
       status: 404,
       statusText: "Not Found",
@@ -44,23 +44,19 @@ export default async function taskGet(req) {
     });
   }
 
-  let previousTask = JSON.parse(blob);
-
   const readableStream = new ReadableStream({
     async start(controller) {
       const { done, value } = getMergedTask(previousTask);
       controller.enqueue(encoder.encode(`data: ${JSON.stringify(value)}\n\n`));
 
       const poll = async () => {
-        const blob = await tasks.get(taskId);
-        if (!blob) {
+        const newTask = await tasks.get(taskId, { type: "json", consistency: "strong" });
+        if (!newTask) {
           console.error("Task Not Found While Polling");
           controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
           controller.close();
           return;
         }
-
-        const newTask = JSON.parse(blob);
 
         if (newTask.cursor === previousTask.cursor) {
           setTimeout(poll, 100);

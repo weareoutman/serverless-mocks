@@ -354,7 +354,7 @@ export async function initializeTask(requirement) {
     cursor: 0,
   };
 
-  await store.set(id, JSON.stringify(task));
+  await store.setJSON(id, task);
 
   return task;
 }
@@ -368,10 +368,10 @@ export function run(task) {
       cursor++;
       const allEventStream = getEventStream(task.input);
       const done = cursor >= allEventStream.length - 1;
-      await store.set(task.id, JSON.stringify({
+      await store.setJSON(task.id, {
         ...task,
         cursor,
-      }));
+      });
 
       console.log("progressing", task.id, cursor, done);
 
